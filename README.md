@@ -1,6 +1,6 @@
 # Rate Limit
 
-O limitador de taxa pode ser usado para limitar ataxa na qual determinada operação pode ser executada. Atualmente tem disponível uma implementação para o <code>Redis</code> e <code>Memcached</code>.
+O limitador de taxa pode ser usado para limitar a taxa na qual determinada operação pode ser executada. Atualmente tem disponível uma implementação para o <code>Redis</code> e <code>Memcached</code>.
 
 ### Uso
 
