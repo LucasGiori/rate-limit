@@ -1,0 +1,44 @@
+name: Testes e Cobertura de Código
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  DOCKER_REGISTRY_URL: registry.hub.docker.com
+  DOCKER_REGISTRY_AUTH: ${{ secrets.DOCKER_REGISTRY_AUTH }}
+
+jobs:
+  testes-e-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Pull custom image
+        run: |
+          docker pull $DOCKER_REGISTRY_URL/lucas770docker/php:rate-limit-php-8.1
+
+      - name: Set up custom Docker environment
+        run: |
+          docker run -it --rm \
+            -v $PWD:/app \
+            $DOCKER_REGISTRY_URL/lucas770docker/php:rate-limit-php-8.1
+
+      - name: Instalar Dependências
+        run: composer install
+
+      - name: Executar Testes Unitários
+        run: vendor/bin/phpunit
+
+      - name: Gerar Cobertura de Código
+        run: vendor/bin/phpunit --coverage-html
+
+      - name: Upload de Artefato de Cobertura
+        uses: actions/upload-artifact@v3
+        with:
+          name: cobertura-html
+          path: ./coverage-html
