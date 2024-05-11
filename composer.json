@@ -19,9 +19,7 @@
   ],
   "require": {
     "phpunit/phpunit": "^9.5",
-    "predis/predis": "^2.0",
-    "ext-redis": "*",
-    "ext-memcached": "*"
+    "predis/predis": "^2.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "3.7.1"

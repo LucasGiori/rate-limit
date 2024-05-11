@@ -1,14 +1,14 @@
 PWD = $(shell pwd -L)
-DOCKER_RUN = docker container exec php81
+DOCKER_RUN = docker run --rm -it --network host -v ${PWD}:/app lucas770docker/php:build-8.1
 
 update:
-	- ${DOCKER_RUN} composer update
+	- ${DOCKER_RUN} 'composer update'
 
 test:
-	- ${DOCKER_RUN} composer test
+	- ${DOCKER_RUN} 'composer test'
 
 php-cs:
-	- ${DOCKER_RUN} composer php-cs
+	- ${DOCKER_RUN} 'composer php-cs'
 
 open-dashboard:
 	- xdg-open report/html-coverage/dashboard.html
