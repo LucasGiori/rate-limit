@@ -46,10 +46,10 @@ jobs:
         run: vendor/bin/phpunit --testdox
 
       - name: Gerar Cobertura de Código
-        run: vendor/bin/phpunit --coverage-html .
+        run: vendor/bin/phpunit --coverage-text=./app/report/coverage.txt
 
       - name: Upload de Artefato de Cobertura
         uses: actions/upload-artifact@v3
         with:
-          name: cobertura-html
-          path: ./coverage-html
+          name: coverage.txt
+          path: ./app/report/
