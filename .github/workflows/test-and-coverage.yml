@@ -8,7 +8,6 @@ on:
 
 env:
   DOCKER_REGISTRY_URL: registry.hub.docker.com
-  DOCKER_REGISTRY_AUTH: ${{ secrets.DOCKER_REGISTRY_AUTH }}
 
 jobs:
   testes-e-coverage:
@@ -18,7 +17,11 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Pull custom image
+      - name: Authenticate to Docker Registry
+        run: |
+          docker login $DOCKER_REGISTRY_URL -u ${{ secrets.DOCKER_REGISTRY_AUTH.username }} -p ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
+
+      - name: Pull Custom Image
         run: |
           docker pull $DOCKER_REGISTRY_URL/lucas770docker/php:rate-limit-php-8.1
 
