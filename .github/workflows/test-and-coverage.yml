@@ -41,7 +41,7 @@ jobs:
           docker run --rm \
             -e XDEBUG_MODE=coverage \
             -v $PWD:/app \
-            $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1  "composer install | vendor/bin/phpunit --testdox --coverage-text=./app/report/coverage.txt"
+            $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1  "composer install && vendor/bin/phpunit --testdox --coverage-text=./app/report/coverage.txt"
 
       - name: Upload de Artefato de Cobertura
         uses: actions/upload-artifact@v3
