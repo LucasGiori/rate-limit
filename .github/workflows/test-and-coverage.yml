@@ -19,7 +19,7 @@ jobs:
 
       - name: Authenticate to Docker Registry
         run: |
-          docker login $DOCKER_REGISTRY_URL -u ${{ secrets.DOCKER_REGISTRY_AUTH.username }} -p ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
+          docker login $DOCKER_REGISTRY_URL --username ${{ secrets.DOCKER_REGISTRY_AUTH.username }} --password ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
 
       - name: Pull Custom Image
         run: |
