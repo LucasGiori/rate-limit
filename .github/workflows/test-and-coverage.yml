@@ -46,7 +46,7 @@ jobs:
         run: vendor/bin/phpunit --testdox
 
       - name: Gerar Cobertura de Código
-        run: vendor/bin/phpunit --coverage-html
+        run: vendor/bin/phpunit --coverage-html .
 
       - name: Upload de Artefato de Cobertura
         uses: actions/upload-artifact@v3
