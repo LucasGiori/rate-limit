@@ -1,18 +1,16 @@
-name: Release PR
-
 on:
-  pull_request:
-    types: [edited]
+  issue_comment:
+    types: [created]
 
 jobs:
   release:
-    if: contains(github.event.comment.body, 'Delivered')
+    if: contains(github.event.comment.body, 'Delivered') && github.event.issue.pull_request
     runs-on: ubuntu-latest
     steps:
       - name: Check if PR is from release branch to master
-        if: ${{ github.event.pull_request.base.ref == 'master' && startsWith(github.event.pull_request.head.ref, 'release/') }}
+        if: ${{ github.event.issue.pull_request.base.ref == 'master' && startsWith(github.event.issue.pull_request.head.ref, 'release/') }}
         run: |
-          branch=${{ github.event.pull_request.head.ref }}
+          branch=${{ github.event.issue.pull_request.head.ref }}
           echo "Creating release from branch $branch"
 
           # Generate tag
@@ -40,4 +38,4 @@ jobs:
               body: notes,
               draft: false,
               prerelease: false
-             });
+            });
