@@ -31,13 +31,13 @@ jobs:
 
       - name: Pull Custom Image
         run: |
-          docker pull $DOCKER_REGISTRY_URL/lucas770docker/php:rate-limit-php-8.1
+          docker pull $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1
 
       - name: Set up custom Docker environment
         run: |
           docker run -it --rm \
             -v $PWD:/app \
-            $DOCKER_REGISTRY_URL/lucas770docker/php:rate-limit-php-8.1
+            $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1
 
       - name: Instalar Dependências
         run: composer install
