@@ -19,9 +19,15 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
+      - name: Print Environment Variables
+        run: |
+          echo "## Environment Variables"
+          echo "DOCKER_REGISTRY_URL: ${DOCKER_REGISTRY_URL}"
+          echo "DOCKER_USERNAME: ${DOCKER_USERNAME}"
+
       - name: Authenticate to Docker Registry
         run: |
-          echo $DOCKER_PASSWORD |  docker login $DOCKER_REGISTRY_URL --username $DOCKER_USERNAME --password-stdin
+          echo $DOCKER_PASSWORD |  docker login --username $DOCKER_USERNAME --password-stdin $DOCKER_REGISTRY_URL
 
       - name: Pull Custom Image
         run: |
