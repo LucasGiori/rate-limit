@@ -20,20 +20,17 @@ class RedisRateLimiterTest extends TestCase
 
     public function setUp(): void
     {
-        $redis = new Redis();
+        $redis = new Redis(['connectTimeout' => 1, 'readTimeout' => 1]);
+
 
         try {
-            $connected = $redis->connect('redis', 6379);
-            if (!$connected) {
-                throw new RedisException(message: 'Não foi possível se conectar');
-            }
+            $redis->ping();
         } catch (RedisException) {
             $this->markTestSkipped(
                 message: 'O Ambiente de desenvolvimento com o redis precisa estar up para executar o teste!'
             );
         }
-
-        $this->redis = new RedisClient(redis: $redis);
+        $this->redis = new RedisClient(redis: $redis->connect(host: 'redis', port: 6379, timeout: 1, read_timeout: 1));
     }
 
     public function testShouldRunTheLimiterWithNoExceptions(): void

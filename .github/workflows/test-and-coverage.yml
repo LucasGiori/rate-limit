@@ -14,7 +14,6 @@ env:
 jobs:
   testes-e-coverage:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -24,6 +23,10 @@ jobs:
           echo "## Environment Variables"
           echo "DOCKER_REGISTRY_URL: ${DOCKER_REGISTRY_URL}"
           echo "DOCKER_USERNAME: ${DOCKER_USERNAME}"
+          echo "$PWD"
+          echo $PWD
+          echo "$(pwd)"
+          echo $(pwd)
 
       - name: Authenticate to Docker Registry
         run: |
@@ -33,20 +36,12 @@ jobs:
         run: |
           docker pull $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1
 
-      - name: Set up custom Docker environment
+      - name: Set up custom Docker environment and execute dependency installs and tests
         run: |
           docker run --rm \
+            -e XDEBUG_MODE=coverage \
             -v $PWD:/app \
-            $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1
-
-      - name: Instalar Dependências
-        run: composer install
-
-      - name: Executar Testes Unitários
-        run: vendor/bin/phpunit --testdox
-
-      - name: Gerar Cobertura de Código
-        run: vendor/bin/phpunit --coverage-text=./app/report/coverage.txt
+            $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1  "composer install && vendor/bin/phpunit --testdox --coverage-text=./app/report/coverage.txt"
 
       - name: Upload de Artefato de Cobertura
         uses: actions/upload-artifact@v3
