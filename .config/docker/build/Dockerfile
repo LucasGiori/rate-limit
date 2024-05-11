@@ -2,8 +2,9 @@ FROM php:8.1.9-alpine
 
 RUN apk update && apk add --no-cache git $PHPIZE_DEPS \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
+    && apk add --no-cache libzip-dev zlib-dev libmemcached-dev \
+    && pecl install xdebug redis memcached\
+    && docker-php-ext-enable xdebug redis memcached \
     && pecl clear-cache \
     && apk del .build-deps
 

@@ -20,8 +20,9 @@ class MemcachedRateLimiterTest extends TestCase
     public function setUp(): void
     {
         $memcached = new Memcached();
-        $memcached->addServer(host: 'memcached', port: 11211);
+        $memcached->setOption(option: Memcached::OPT_CONNECT_TIMEOUT, value: 1);
         $memcached->setOption(option: Memcached::OPT_BINARY_PROTOCOL, value: true);
+        $memcached->addServer(host: 'memcached', port: 11211);
 
         if (empty($memcached->getStats())) {
             $this->markTestSkipped(
