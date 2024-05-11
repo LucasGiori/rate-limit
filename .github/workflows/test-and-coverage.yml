@@ -43,7 +43,7 @@ jobs:
         run: composer install
 
       - name: Executar Testes Unitários
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --testdox
 
       - name: Gerar Cobertura de Código
         run: vendor/bin/phpunit --coverage-html
