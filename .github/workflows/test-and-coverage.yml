@@ -44,6 +44,9 @@ jobs:
             -v $PWD:/app \
             $DOCKER_REGISTRY_URL/$DOCKER_USERNAME/php:build-8.1
 
+      - name: Validar extensões instaladas no php
+        run: php -m
+
       - name: Instalar Dependências
         run: composer install
 
