@@ -24,6 +24,10 @@ jobs:
           echo "## Environment Variables"
           echo "DOCKER_REGISTRY_URL: ${DOCKER_REGISTRY_URL}"
           echo "DOCKER_USERNAME: ${DOCKER_USERNAME}"
+          echo "$PWD"
+          echo $PWD
+          echo "$(pwd)"
+          echo $(pwd)
 
       - name: Authenticate to Docker Registry
         run: |
