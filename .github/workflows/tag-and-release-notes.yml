@@ -1,49 +1,43 @@
-name: Generate tag and release notes
+name: Release PR
 
 on:
-  pull_request_review_comment:
-    branches: [ master ]
-    paths:
-      - '**/release/*.*.*'
-    comment_body:
-      - delivered
+  pull_request:
+    types: [edited]
+
 jobs:
-  generate-release-tag:
+  release:
+    if: contains(github.event.comment.body, 'Delivered')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Obter nome da tag
-        id: get_tag_name
+      - name: Check if PR is from release branch to master
+        if: ${{ github.event.pull_request.base.ref == 'master' && startsWith(github.event.pull_request.head.ref, 'release/') }}
         run: |
-          branch_name=${{ github.event.pull_request.head.ref }}
-          tag_name=$(echo $branch_name | cut -d'/' -f 2-)
-          echo "::set-output name=tag_name::$tag_name"
+          branch=${{ github.event.pull_request.head.ref }}
+          echo "Creating release from branch $branch"
 
-      - name: Criar tag de lançamento
-        uses: actions/create-release@v3
+          # Generate tag
+          tag="v${branch#release/}"
+          echo "::set-output name=tag::$tag"
+
+          # Generate Release notes
+          notes=$(git log --format=%B ${{ github.event.before }}..${{ github.event.after }} --no-merges)
+          echo "::set-output name=notes::$notes"
+
+      - name: Create tag and Release notes
+        if: ${{ steps.release.outputs.tag != '' && steps.release.outputs.notes != '' }}
+        uses: actions/github-script@v5
         with:
-          tag_name: ${{ steps.get_tag_name.outputs.tag_name }}
-          release_name: ${{ steps.get_tag_name.outputs.tag_name }}
-          body: |
-            Este lançamento foi gerado automaticamente a partir da branch ${{ steps.get_tag_name.outputs.tag_name }}.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const tag = '${{ steps.release.outputs.tag }}';
+            const notes = '${{ steps.release.outputs.notes }}';
 
-  generate-release-notes:
-    runs-on: ubuntu-latest
-    needs: [ generate-release-tag ]
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Gerar notas de versão
-        id: generate_release_notes
-        run: |
-          branch_name=${{ github.event.pull_request.head.ref }}
-          tag_name=$(echo $branch_name | cut -d'/' -f 2-)
-          release_notes=$(git log --pretty=format:"* %s" $tag_name..master)
-          echo "::set-output name=release_notes::$release_notes"
-
-      - name: Atualizar notas de versão do lançamento
-        uses: actions/update-release-notes@v3
-        with:
-          tag_name: ${{ steps.get_tag_name.outputs.tag_name }}
-          release_body: ${{ steps.generate_release_notes.outputs.release_notes }}
+            github.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: tag,
+              body: notes,
+              draft: false,
+              prerelease: false
+             });
