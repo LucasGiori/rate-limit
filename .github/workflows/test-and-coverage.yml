@@ -8,8 +8,8 @@ on:
 
 env:
   DOCKER_REGISTRY_URL: registry.hub.docker.com
-  DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_AUTH.username }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 jobs:
   testes-e-coverage:
