@@ -6,6 +6,7 @@ O limitador de taxa pode ser usado para limitar a taxa na qual determinada opera
 
 #### Limitador padrão com exception:
 ```php
+
 use RateLimit\Exception\LimitExceeded;
 use RateLimit\Rate;
 use RateLimit\RedisRateLimiter;
