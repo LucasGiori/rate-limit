@@ -8,6 +8,8 @@ on:
 
 env:
   DOCKER_REGISTRY_URL: registry.hub.docker.com
+  DOCKER_USERNAME: ${{ secrets.DOCKER_REGISTRY_AUTH.username }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
 
 jobs:
   testes-e-coverage:
@@ -19,7 +21,7 @@ jobs:
 
       - name: Authenticate to Docker Registry
         run: |
-          docker login $DOCKER_REGISTRY_URL --username ${{ secrets.DOCKER_REGISTRY_AUTH.username }} --password ${{ secrets.DOCKER_REGISTRY_AUTH.password }}
+          echo $DOCKER_PASSWORD |  docker login $DOCKER_REGISTRY_URL --username $DOCKER_USERNAME --password-stdin
 
       - name: Pull Custom Image
         run: |
