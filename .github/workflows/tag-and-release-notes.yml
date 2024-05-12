@@ -1,4 +1,4 @@
-name: "Release Tag"
+name: Release Tag
 
 on:
   push:
@@ -7,27 +7,27 @@ on:
 
 jobs:
   release:
+    if: startsWith(github.event.pull_request.head.ref, 'release/') && github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Get last commit from release branch
+      - name: Get release branch name
         run: |
-          git fetch origin refs/heads/release/*.*.*:refs/remotes/origin/release/*.*.*
-          release_commit=$(git rev-list --max-count=1 origin/release/*.*.*)
-          git checkout $release_commit
-          echo "::set-output name=release_commit::$release_commit"
+          branch=$(echo "${{ github.event.pull_request.head.ref }}" | cut -d '/' -f 2-)
+          echo "::set-output name=release_branch::$branch"
+
+      - name: Get release commit
+        run: |
+          branch=${{ steps.release.outputs.release_branch }}
+          commit=$(git log --pretty=format:%H -1 "refs/heads/release/$branch")
+          echo "::set-output name=release_commit::$commit"
 
       - name: Create tag
-        if: success()
         run: |
-          release_commit=${{ steps.release.outputs.release_commit }}
-          tag="v${{ github.run_number }}"
-          git tag $tag $release_commit
+          branch=${{ steps.release.outputs.release_branch }}
+          commit=${{ steps.release.outputs.release_commit }}
+          tag="v${branch}"
+          git tag $tag $commit
           git push origin $tag
-
-      - name: Delete release branch
-        if: success()
-        run: |
-          git push origin --delete release/*.*.*
