@@ -9,8 +9,6 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
-
-
     <testsuite name="unit">
         <directory>tests/</directory>
     </testsuite>
@@ -29,6 +27,4 @@
             <html outputDirectory="report/html-coverage" lowUpperBound="50" highLowerBound="90"/>
         </report>
     </coverage>
-
-
 </phpunit>

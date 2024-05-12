@@ -1,11 +1,15 @@
 # Rate Limit
+### Build
+[![Testes e Cobertura de Código](https://github.com/LucasGiori/rate-limit/actions/workflows/test-and-coverage.yml/badge.svg)](https://github.com/LucasGiori/rate-limit/actions/workflows/test-and-coverage.yml)
 
+### Descrição
 O limitador de taxa pode ser usado para limitar a taxa na qual determinada operação pode ser executada. Atualmente tem disponível uma implementação para o <code>Redis</code> e <code>Memcached</code>.
 
 ### Uso
 
 #### Limitador padrão com exception:
 ```php
+
 use RateLimit\Exception\LimitExceeded;
 use RateLimit\Rate;
 use RateLimit\RedisRateLimiter;
